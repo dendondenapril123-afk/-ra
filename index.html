@@ -1,5 +1,6 @@
 import pygame
 import sys
+import random
 
 # Инициализация Pygame
 pygame.init()
@@ -59,16 +60,16 @@ def main_menu():
 
 def create_team():
     # Здесь будет логика создания команды
-    # Для простоты — просто тестовая сцена с кружками
+    # Для простоты — просто сцена с кружками
     team_screen()
 
 def settings():
     # Простая страница настроек
+    # Можно расширить по желанию
     pass
 
 def team_screen():
     # Простая сцена с кружками, двигающимися по карте
-    # Создаем несколько кружков с характеристиками
     players = generate_players(5)
     running = True
     while running:
@@ -95,7 +96,6 @@ def team_screen():
         clock.tick(FPS)
 
 def generate_players(num):
-    import random
     players = []
     for _ in range(num):
         player = {
@@ -103,11 +103,15 @@ def generate_players(num):
             'iq': random.randint(30, 99),
             'team_play': random.randint(30, 99),
             'leadership': random.randint(30, 99),
-            'pos': [random.randint(50, WIDTH-50), random.randint(50, HEIGHT-50)],
+            'pos': [random.randint(50, WIDTH - 50), random.randint(50, HEIGHT - 50)],
             'speed': [random.uniform(-2, 2), random.uniform(-2, 2)]
         }
         players.append(player)
     return players
 
 if __name__ == "__main__":
+    main_menu()
+
+if __name__ == "__main__":
+
     main_menu()
