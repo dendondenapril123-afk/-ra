@@ -1,0 +1,113 @@
+import pygame
+import sys
+
+# Инициализация Pygame
+pygame.init()
+
+# Константы
+WIDTH, HEIGHT = 800, 600
+FPS = 60
+BG_COLOR = (30, 30, 30)
+FONT_COLOR = (255, 255, 255)
+
+# Создаем окно
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Моя тактическая игра")
+clock = pygame.time.Clock()
+
+# Шрифты
+font = pygame.font.SysFont(None, 40)
+
+# Меню опции
+menu_items = ["Создать команду", "Настройки", "Выйти"]
+selected_idx = 0
+
+def draw_text(text, pos):
+    rendered = font.render(text, True, FONT_COLOR)
+    screen.blit(rendered, pos)
+
+def main_menu():
+    global selected_idx
+    running = True
+    while running:
+        screen.fill(BG_COLOR)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_DOWN:
+                    selected_idx = (selected_idx + 1) % len(menu_items)
+                elif event.key == pygame.K_UP:
+                    selected_idx = (selected_idx - 1) % len(menu_items)
+                elif event.key == pygame.K_RETURN:
+                    if menu_items[selected_idx] == "Создать команду":
+                        create_team()
+                    elif menu_items[selected_idx] == "Настройки":
+                        settings()
+                    elif menu_items[selected_idx] == "Выйти":
+                        pygame.quit()
+                        sys.exit()
+
+        # Рисуем меню
+        for i, item in enumerate(menu_items):
+            color = (255, 0, 0) if i == selected_idx else FONT_COLOR
+            draw_text(item, (350, 200 + i * 50))
+        
+        pygame.display.flip()
+        clock.tick(FPS)
+
+def create_team():
+    # Здесь будет логика создания команды
+    # Для простоты — просто тестовая сцена с кружками
+    team_screen()
+
+def settings():
+    # Простая страница настроек
+    pass
+
+def team_screen():
+    # Простая сцена с кружками, двигающимися по карте
+    # Создаем несколько кружков с характеристиками
+    players = generate_players(5)
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                running = False
+
+        screen.fill((50, 50, 50))
+        # Отрисовка кружков
+        for p in players:
+            p['pos'][0] += p['speed'][0]
+            p['pos'][1] += p['speed'][1]
+            # Простая граница
+            if p['pos'][0] < 0 or p['pos'][0] > WIDTH:
+                p['speed'][0] *= -1
+            if p['pos'][1] < 0 or p['pos'][1] > HEIGHT:
+                p['speed'][1] *= -1
+            pygame.draw.circle(screen, (0, 255, 0), (int(p['pos'][0]), int(p['pos'][1])), 10)
+
+        pygame.display.flip()
+        clock.tick(FPS)
+
+def generate_players(num):
+    import random
+    players = []
+    for _ in range(num):
+        player = {
+            'shooting': random.randint(30, 99),
+            'iq': random.randint(30, 99),
+            'team_play': random.randint(30, 99),
+            'leadership': random.randint(30, 99),
+            'pos': [random.randint(50, WIDTH-50), random.randint(50, HEIGHT-50)],
+            'speed': [random.uniform(-2, 2), random.uniform(-2, 2)]
+        }
+        players.append(player)
+    return players
+
+if __name__ == "__main__":
+    main_menu()
